@@ -9,14 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import net.objecthunter.exp4j.ExpressionBuilder
-import net.objecthunter.exp4j.function.Function
 
-class PercentFunction : Function("per", 1) {
-    override fun apply(vararg args: Double): Double {
-        val value = args[0]
-        return value / 100.0
-    }
-}
 
 class MainActivity : AppCompatActivity() {
     private lateinit var expr: TextView
@@ -79,11 +72,13 @@ class MainActivity : AppCompatActivity() {
 
         var str:String
         var checker = true
+        var check_dot = true
         ac.setOnClickListener {
             exprText("0")
             expr.textSize = 45F
             result.textSize = 30F
             checker = true
+            check_dot = true
             resultText()
         }
         plus_minus.setOnClickListener {
@@ -103,11 +98,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         percent.setOnClickListener {
-            if (expr.text.toString().endsWith("per")||expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
+            if (expr.text.toString().endsWith("p")||expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
                 str = expr.text.toString()
                 exprText(str)
             }else{
-                str = expr.text.toString() + "per"
+                str = expr.text.toString() + "p"
                 exprText(str)
             }
         }
@@ -119,6 +114,8 @@ class MainActivity : AppCompatActivity() {
                 str = expr.text.toString() + "/"
                 exprText(str)
             }
+            check_dot = true
+
         }
         multiply.setOnClickListener {
             if (expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
@@ -128,6 +125,8 @@ class MainActivity : AppCompatActivity() {
                 str = expr.text.toString() + "*"
                 exprText(str)
             }
+            check_dot = true
+
         }
         subtract.setOnClickListener {
             if (expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
@@ -137,6 +136,8 @@ class MainActivity : AppCompatActivity() {
                 str = expr.text.toString() + "-"
                 exprText(str)
             }
+            check_dot = true
+
         }
         add.setOnClickListener {
             if (expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
@@ -146,18 +147,26 @@ class MainActivity : AppCompatActivity() {
                 str = expr.text.toString() + "+"
                 exprText(str)
             }
+            check_dot = true
         }
         equal.setOnClickListener {
             expr.textSize = 30F
             result.textSize = 45F
         }
         dot.setOnClickListener {
-            if (expr.text.toString().endsWith("per")||expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
-                str = expr.text.toString()
-                exprText(str)
-            }else{
-                str = expr.text.toString() + "."
-                exprText(str)
+            if (check_dot) {
+                if (expr.text.toString().endsWith("p") || expr.text.toString()
+                        .endsWith("/") || expr.text.toString().endsWith("*") || expr.text.toString()
+                        .endsWith("+") || expr.text.toString().endsWith("-") || expr.text.toString()
+                        .endsWith(".")
+                ) {
+                    str = expr.text.toString()
+                    exprText(str)
+                } else {
+                    str = expr.text.toString() + "."
+                    exprText(str)
+                    check_dot = false
+                }
             }
         }
         one.setOnClickListener {
@@ -273,7 +282,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun exprText(str:String){
-        expr.text = str
+        expr.text = str//.replace("per", "٪")
     }
 
     private fun resultText(){
