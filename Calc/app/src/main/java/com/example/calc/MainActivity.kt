@@ -1,5 +1,6 @@
 package com.example.calc
 
+import android.health.connect.datatypes.units.Length
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.Button
@@ -82,19 +83,21 @@ class MainActivity : AppCompatActivity() {
             resultText()
         }
         plus_minus.setOnClickListener {
-            val tmp = findLastNumber(str).toString()
-            if (checker){
-                checker = false
-                str = str.replace(tmp, "(-" + tmp + ")")
-                exprText(str)
-                resultText()
-            }else{
-                //if (str.endsWith("(-" + tmp + ")")){
-                    //str = str.replace("(-" + tmp + ")", tmp)
-                //}
-                checker = true
-                exprText(str)
-                resultText()
+            if (!(str.endsWith("p")||str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith("."))){
+                val tmp = findLastNumber(str).toString()
+                if (checker) {
+                    checker = false
+                    str = str.dropLast(tmp.length) + "(-" + tmp + ")"
+                    exprText(str)
+                    resultText()
+                } else {
+                    if (str.endsWith("(-" + tmp + ")")) {
+                        str = str.replace("(-" + tmp + ")", tmp)
+                    }
+                    checker = true
+                    exprText(str)
+                    resultText()
+                }
             }
         }
         percent.setOnClickListener {
