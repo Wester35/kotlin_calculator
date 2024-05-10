@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var eight: Button
     private lateinit var nine: Button
     private lateinit var zero: Button
-
+    private lateinit var str: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,16 +65,16 @@ class MainActivity : AppCompatActivity() {
         eight = findViewById(R.id.eight)
         nine = findViewById(R.id.nine)
         zero = findViewById(R.id.zero)
-
+        str = "0"
         expr.movementMethod = ScrollingMovementMethod()
         expr.isActivated = true
         expr.isPressed = true
 
-        var str:String
         var checker = true
         var check_dot = true
         ac.setOnClickListener {
-            exprText("0")
+            str = "0"
+            exprText(str)
             expr.textSize = 45F
             result.textSize = 30F
             checker = true
@@ -82,69 +82,64 @@ class MainActivity : AppCompatActivity() {
             resultText()
         }
         plus_minus.setOnClickListener {
-            str = expr.text.toString()
+            val tmp = findLastNumber(str).toString()
             if (checker){
                 checker = false
-                str = "-(" + str + ")"
+                str = str.replace(tmp, "(-" + tmp + ")")
                 exprText(str)
                 resultText()
             }else{
-                if (str.length >= 3 && str.startsWith("-(") && str.endsWith(")")) {
-                    str = str.substring(2).dropLast(1)
-                }
+                //if (str.endsWith("(-" + tmp + ")")){
+                    //str = str.replace("(-" + tmp + ")", tmp)
+                //}
                 checker = true
                 exprText(str)
                 resultText()
             }
         }
         percent.setOnClickListener {
-            if (expr.text.toString().endsWith("p")||expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
-                str = expr.text.toString()
+            if (str.endsWith("p")||str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
                 exprText(str)
             }else{
-                str = expr.text.toString() + "p"
+                str += "p"
                 exprText(str)
             }
         }
         division.setOnClickListener {
-            if (expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
-                str = expr.text.toString()
+            if (str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
                 exprText(str)
             }else{
-                str = expr.text.toString() + "/"
+                str += "/"
                 exprText(str)
             }
             check_dot = true
 
         }
         multiply.setOnClickListener {
-            if (expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
-                str = expr.text.toString()
+            if (str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
                 exprText(str)
             }else{
-                str = expr.text.toString() + "*"
+                str += "*"
                 exprText(str)
             }
             check_dot = true
 
         }
         subtract.setOnClickListener {
-            if (expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
-                str = expr.text.toString()
+            if (str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
                 exprText(str)
             }else{
-                str = expr.text.toString() + "-"
+                str += "-"
                 exprText(str)
             }
             check_dot = true
 
         }
         add.setOnClickListener {
-            if (expr.text.toString().endsWith("/")||expr.text.toString().endsWith("*")||expr.text.toString().endsWith("+")||expr.text.toString().endsWith("-")||expr.text.toString().endsWith(".")){
-                str = expr.text.toString()
+            if (str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
                 exprText(str)
             }else{
-                str = expr.text.toString() + "+"
+                str += "+"
                 exprText(str)
             }
             check_dot = true
@@ -155,138 +150,148 @@ class MainActivity : AppCompatActivity() {
         }
         dot.setOnClickListener {
             if (check_dot) {
-                if (expr.text.toString().endsWith("p") || expr.text.toString()
-                        .endsWith("/") || expr.text.toString().endsWith("*") || expr.text.toString()
-                        .endsWith("+") || expr.text.toString().endsWith("-") || expr.text.toString()
+                if (str.endsWith("p") || str
+                        .endsWith("/") || str.endsWith("*") || str
+                        .endsWith("+") || str.endsWith("-") || str
                         .endsWith(".")
                 ) {
-                    str = expr.text.toString()
                     exprText(str)
                 } else {
-                    str = expr.text.toString() + "."
+                    str += "."
                     exprText(str)
                     check_dot = false
                 }
             }
         }
         one.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "1"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "1"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "1"
+                str += "1"
                 exprText(str)
                 resultText()
             }
         }
         two.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "2"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "2"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "2"
+                str += "2"
                 exprText(str)
                 resultText()
             }
         }
         three.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "3"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "3"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "3"
+                str += "3"
                 exprText(str)
                 resultText()
             }
         }
         four.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "4"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "4"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "4"
+                str += "4"
                 exprText(str)
                 resultText()
             }
         }
         five.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "5"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "5"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "5"
+                str += "5"
                 exprText(str)
                 resultText()
             }
         }
         six.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "6"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "6"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "6"
+                str += "6"
                 exprText(str)
                 resultText()
             }
         }
         seven.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "7"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "7"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "7"
+                str += "7"
                 exprText(str)
                 resultText()
             }
         }
         eight.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "8"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "8"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "8"
+                str += "8"
                 exprText(str)
                 resultText()
             }
         }
         nine.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "9"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "9"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "9"
+                str += "9"
                 exprText(str)
                 resultText()
             }
         }
         zero.setOnClickListener {
-            if(expr.text.toString().startsWith("0")){
-                str = expr.text.toString().replace("0", "") + "0"
+            if(str.startsWith("0")){
+                str = str.replace("0", "") + "0"
                 exprText(str)
                 resultText()
             }else{
-                str = expr.text.toString() + "0"
+                str += "0"
                 exprText(str)
                 resultText()
             }
         }
     }
 
+    private fun findLastNumber(expression: String): String? {
+        //     val regex = Regex("""-?\d+(\.\d+)?(?![\d.])""")
+        val regex = Regex("""(?=\d)(?:\d+(\.\d+)?)\b""")
+        val matches = regex.findAll(expression)
+        var lastMatch: MatchResult? = null
+        for (match in matches) {
+            lastMatch = match
+        }
+        return lastMatch?.value
+    }
+
     private fun exprText(str:String){
-        expr.text = str//.replace("per", "٪")
+        expr.text = str.replace("p", "%").replace("*", "×").replace("/", "÷")
     }
 
     private fun resultText(){
-        val exp = expr.text.toString()
+        val exp = str
         try {
             val _exp = ExpressionBuilder(exp).function(PercentFunction()).build()
             val res = _exp.evaluate()
@@ -296,8 +301,8 @@ class MainActivity : AppCompatActivity() {
                 result.text = "=$res"
             }
         }catch (e:Exception){
-            expr.text = expr.text.toString()
-            result.text = expr.text.toString()
+            expr.text = str
+            result.text = "NaN"
         }
     }
 }
