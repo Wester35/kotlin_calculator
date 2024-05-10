@@ -307,7 +307,7 @@ class MainActivity : AppCompatActivity() {
                 result.text = "=$res"
             }
         }catch (e:Exception){
-            expr.text = str
+            exprText(str)
             result.text = "NaN"
         }
     }
