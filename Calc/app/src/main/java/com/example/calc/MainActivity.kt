@@ -1,5 +1,6 @@
 package com.example.calc
 
+import android.content.pm.ActivityInfo
 import android.health.connect.datatypes.units.Length
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var zero: Button
     private lateinit var str: String
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -92,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                     resultText()
                 } else {
                     if (str.endsWith("(-" + tmp + ")")) {
-                        str = str.replace("(-" + tmp + ")", tmp)
+                        str = str.dropLast(tmp.length + 3) + tmp
                     }
                     checker = true
                     exprText(str)
@@ -107,6 +109,7 @@ class MainActivity : AppCompatActivity() {
                 str += "p"
                 exprText(str)
             }
+            checker = true
         }
         division.setOnClickListener {
             if (str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
@@ -116,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                 exprText(str)
             }
             check_dot = true
-
+            checker = true
         }
         multiply.setOnClickListener {
             if (str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                 exprText(str)
             }
             check_dot = true
-
+            checker = true
         }
         subtract.setOnClickListener {
             if (str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
@@ -136,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 exprText(str)
             }
             check_dot = true
-
+            checker = true
         }
         add.setOnClickListener {
             if (str.endsWith("/")||str.endsWith("*")||str.endsWith("+")||str.endsWith("-")||str.endsWith(".")){
@@ -146,6 +149,7 @@ class MainActivity : AppCompatActivity() {
                 exprText(str)
             }
             check_dot = true
+            checker = true
         }
         equal.setOnClickListener {
             expr.textSize = 30F
@@ -279,7 +283,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findLastNumber(expression: String): String? {
-        //     val regex = Regex("""-?\d+(\.\d+)?(?![\d.])""")
         val regex = Regex("""(?=\d)(?:\d+(\.\d+)?)\b""")
         val matches = regex.findAll(expression)
         var lastMatch: MatchResult? = null
